@@ -1,4 +1,4 @@
-import React, {  createContext, useMemo, useDebugValue } from 'react';
+import React, {  createContext, useMemo, useDebugValue, useState, useEffect } from 'react';
 import { ToggleButton } from './ToggleButton';
 import Counter from './Counter';
 import { useTitle } from './hooks/useTitle';
@@ -8,6 +8,7 @@ import { useTitle } from './hooks/useTitle';
   
   const App = () => {
     const [ value, setValue ] = useTitle('');
+    const [dishes, setDishes] = useState([])
     const formSubmit = () => {
       console.log('hello submit, this be sent to: ' + value);
       setValue('');
@@ -23,6 +24,14 @@ import { useTitle } from './hooks/useTitle';
     const TitleReverse =  useMemo(() => reverseWord(value), [value]);
     useDebugValue(value);
 
+    const fetchData = async () => {
+      const response =  await fetch('https://my-json-server.typicode.com/leveluptuts/fakeapi/dishes');
+     const data = await response.json()
+     setDishes(data);
+    };
+    useEffect(() => {
+      fetchData();
+    }, []);
     return (
       <UserContext.Provider
         value={{
@@ -43,7 +52,21 @@ import { useTitle } from './hooks/useTitle';
               value !== '' && <h1>hello the value saved is {value }</h1>
             }
             <button type='submit'>submit</button>
-          </form>
+          </form>{
+            dishes.map(dish => (
+              <article className='dish-card dish-card--withImage'>
+                <h3>{dish.name}</h3>
+                <p>{dish.desc}</p>
+                <div className="ingredients">
+                  {
+                    dish.ingredients.map(ingredient => (
+                      <span>{ingredient}</span>
+                    ))
+                  }
+                </div>
+              </article>
+            ))
+          }
         </div>
       </UserContext.Provider>
     );
