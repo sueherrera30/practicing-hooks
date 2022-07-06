@@ -1,4 +1,4 @@
-import React, {  createContext } from 'react';
+import React, {  createContext, useMemo, useDebugValue } from 'react';
 import { ToggleButton } from './ToggleButton';
 import Counter from './Counter';
 import { useTitle } from './hooks/useTitle';
@@ -12,6 +12,17 @@ import { useTitle } from './hooks/useTitle';
       console.log('hello submit, this be sent to: ' + value);
       setValue('');
     };
+
+    const reverseWord = word => {
+      console.log('function called each render');
+      return word.split("").reverse().join("");
+    }
+
+    // const title = 'Sue lucero martinez herrera'
+
+    const TitleReverse =  useMemo(() => reverseWord(value), [value]);
+    useDebugValue(value);
+
     return (
       <UserContext.Provider
         value={{
@@ -20,6 +31,7 @@ import { useTitle } from './hooks/useTitle';
       >
         <div className="main-wrapper">
           <h1>Level Up Dishes</h1>
+          <h1>{TitleReverse}</h1>
           <ToggleButton />
           <Counter />
           <form onSubmit={e => {
