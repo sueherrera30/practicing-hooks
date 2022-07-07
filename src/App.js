@@ -2,6 +2,7 @@ import React, {  createContext, useMemo, useDebugValue, useState, useEffect } fr
 import { ToggleButton } from './ToggleButton';
 import Counter from './Counter';
 import { useTitle } from './hooks/useTitle';
+import useAbortableFetch from 'use-abortable-fetch';
 
   export const UserContext = createContext();
 
@@ -24,14 +25,20 @@ import { useTitle } from './hooks/useTitle';
     const TitleReverse =  useMemo(() => reverseWord(value), [value]);
     useDebugValue(value);
 
-    const fetchData = async () => {
-      const response =  await fetch('https://my-json-server.typicode.com/leveluptuts/fakeapi/dishes');
-     const data = await response.json()
-     setDishes(data);
-    };
-    useEffect(() => {
-      fetchData();
-    }, []);
+    // const fetchData = async () => {
+    //   const response =  await fetch('https://my-json-server.typicode.com/leveluptuts/fakeapi/dishes');
+    //  const data = await response.json()
+    //  setDishes(data);
+    // };
+
+    // useEffect(() => {
+    //   fetchData();
+    // }, []);
+
+    const { data, loading } = useAbortableFetch('https://my-json-server.typicode.com/leveluptuts/fakeapi/dishes')
+    if(!data) return null;
+    if(loading) return <h1>loading...</h1>
+
     return (
       <UserContext.Provider
         value={{
@@ -53,7 +60,7 @@ import { useTitle } from './hooks/useTitle';
             }
             <button type='submit'>submit</button>
           </form>{
-            dishes.map(dish => (
+            data.map(dish => (
               <article className='dish-card dish-card--withImage'>
                 <h3>{dish.name}</h3>
                 <p>{dish.desc}</p>
