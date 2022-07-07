@@ -1,10 +1,13 @@
-import  React from 'react';
+import  React, { useRef } from 'react';
 import { useBodyScrollLock } from './hooks/bodyScrollLock';
+import { useOnClickOutside } from './hooks/useOnClickOutside';
+const DishForm = ({setToggle}) => {
+    useBodyScrollLock();
+    const ref = useRef();
+    useOnClickOutside(ref, setToggle);
 
-const DishForm = ({toggled}) => {
-    useBodyScrollLock(toggled);
     return (
-        <div className='dish-card'>
+        <div className='dish-card' ref={ref}>
             <form>
                 <label>Name:</label>
                 <input type="text" id="name" />
@@ -12,5 +15,4 @@ const DishForm = ({toggled}) => {
         </div>
     )
 };
-
 export default DishForm;

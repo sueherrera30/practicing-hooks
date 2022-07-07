@@ -5,7 +5,7 @@ import DishForm from './Dishform';
 export const ToggleButton = () => {
     const [isToggled, setToggle] = useState(false);
     const user = useContext(UserContext);
-    console.log('context', user);
+    console.log(user);
 
     const handleToggle = () => setToggle(!isToggled);
     return (
@@ -14,7 +14,7 @@ export const ToggleButton = () => {
                 Toggle
             </button>
             {
-                isToggled && <DishForm />
+                isToggled && <DishForm setToggle={setToggle} />
             }
         </div>
     );
